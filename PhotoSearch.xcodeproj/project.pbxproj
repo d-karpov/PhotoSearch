@@ -7,23 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D3022E192BABA04D00414A2A /* PhotoCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3022E182BABA04D00414A2A /* PhotoCellView.swift */; };
 		D3D238B22BAACC8F000D266C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238B12BAACC8F000D266C /* AppDelegate.swift */; };
 		D3D238B42BAACC8F000D266C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238B32BAACC8F000D266C /* SceneDelegate.swift */; };
-		D3D238B62BAACC8F000D266C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238B52BAACC8F000D266C /* ViewController.swift */; };
-		D3D238B92BAACC8F000D266C /* Base in Resources */ = {isa = PBXBuildFile; fileRef = D3D238B82BAACC8F000D266C /* Base */; };
 		D3D238BB2BAACC90000D266C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3D238BA2BAACC90000D266C /* Assets.xcassets */; };
 		D3D238BE2BAACC90000D266C /* Base in Resources */ = {isa = PBXBuildFile; fileRef = D3D238BD2BAACC90000D266C /* Base */; };
+		D3D238CE2BAB13AD000D266C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238CD2BAB13AD000D266C /* SearchViewController.swift */; };
+		D3D238D32BAB1599000D266C /* UIViewController+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238D22BAB1599000D266C /* UIViewController+Preview.swift */; };
+		D3FB64A32BB1DC7F00C221DD /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB64A22BB1DC7F00C221DD /* NetworkManager.swift */; };
+		D3FB64A52BB2267900C221DD /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB64A42BB2267800C221DD /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D3022E182BABA04D00414A2A /* PhotoCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCellView.swift; sourceTree = "<group>"; };
 		D3D238AE2BAACC8F000D266C /* PhotoSearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D238B12BAACC8F000D266C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3D238B32BAACC8F000D266C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		D3D238B52BAACC8F000D266C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		D3D238B82BAACC8F000D266C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D3D238BA2BAACC90000D266C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D3D238BD2BAACC90000D266C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D3D238BF2BAACC90000D266C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3D238CD2BAB13AD000D266C /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		D3D238D22BAB1599000D266C /* UIViewController+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Preview.swift"; sourceTree = "<group>"; };
+		D3FB64A22BB1DC7F00C221DD /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		D3FB64A42BB2267800C221DD /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +62,82 @@
 		D3D238B02BAACC8F000D266C /* PhotoSearch */ = {
 			isa = PBXGroup;
 			children = (
-				D3D238B12BAACC8F000D266C /* AppDelegate.swift */,
-				D3D238B32BAACC8F000D266C /* SceneDelegate.swift */,
-				D3D238B52BAACC8F000D266C /* ViewController.swift */,
-				D3D238B72BAACC8F000D266C /* Main.storyboard */,
-				D3D238BA2BAACC90000D266C /* Assets.xcassets */,
-				D3D238BC2BAACC90000D266C /* LaunchScreen.storyboard */,
-				D3D238BF2BAACC90000D266C /* Info.plist */,
+				D3FB64A12BB1DC5A00C221DD /* Network */,
+				D3D238CF2BAB1558000D266C /* Extensions */,
+				D3D238C82BAACCFC000D266C /* Scenes */,
+				D3D238C72BAACCE8000D266C /* Storyboards */,
+				D3D238C62BAACCD0000D266C /* Resources */,
+				D3D238C52BAACCAE000D266C /* Configurations */,
 			);
 			path = PhotoSearch;
+			sourceTree = "<group>";
+		};
+		D3D238C52BAACCAE000D266C /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				D3D238B12BAACC8F000D266C /* AppDelegate.swift */,
+				D3D238B32BAACC8F000D266C /* SceneDelegate.swift */,
+				D3D238BF2BAACC90000D266C /* Info.plist */,
+			);
+			path = Configurations;
+			sourceTree = "<group>";
+		};
+		D3D238C62BAACCD0000D266C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D3D238BA2BAACC90000D266C /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D3D238C72BAACCE8000D266C /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				D3D238BC2BAACC90000D266C /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		D3D238C82BAACCFC000D266C /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				D3D238CC2BAB0A48000D266C /* DetailScene */,
+				D3D238C92BAB09D1000D266C /* SearchScene */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		D3D238C92BAB09D1000D266C /* SearchScene */ = {
+			isa = PBXGroup;
+			children = (
+				D3D238CD2BAB13AD000D266C /* SearchViewController.swift */,
+				D3022E182BABA04D00414A2A /* PhotoCellView.swift */,
+			);
+			path = SearchScene;
+			sourceTree = "<group>";
+		};
+		D3D238CC2BAB0A48000D266C /* DetailScene */ = {
+			isa = PBXGroup;
+			children = (
+				D3FB64A42BB2267800C221DD /* DetailViewController.swift */,
+			);
+			path = DetailScene;
+			sourceTree = "<group>";
+		};
+		D3D238CF2BAB1558000D266C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D3D238D22BAB1599000D266C /* UIViewController+Preview.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D3FB64A12BB1DC5A00C221DD /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				D3FB64A22BB1DC7F00C221DD /* NetworkManager.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +200,6 @@
 			files = (
 				D3D238BB2BAACC90000D266C /* Assets.xcassets in Resources */,
 				D3D238BE2BAACC90000D266C /* Base in Resources */,
-				D3D238B92BAACC8F000D266C /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +210,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3D238B62BAACC8F000D266C /* ViewController.swift in Sources */,
+				D3FB64A32BB1DC7F00C221DD /* NetworkManager.swift in Sources */,
+				D3022E192BABA04D00414A2A /* PhotoCellView.swift in Sources */,
+				D3D238CE2BAB13AD000D266C /* SearchViewController.swift in Sources */,
 				D3D238B22BAACC8F000D266C /* AppDelegate.swift in Sources */,
 				D3D238B42BAACC8F000D266C /* SceneDelegate.swift in Sources */,
+				D3D238D32BAB1599000D266C /* UIViewController+Preview.swift in Sources */,
+				D3FB64A52BB2267900C221DD /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		D3D238B72BAACC8F000D266C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D3D238B82BAACC8F000D266C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		D3D238BC2BAACC90000D266C /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -293,12 +361,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PhotoSearch/Info.plist;
+				INFOPLIST_FILE = PhotoSearch/Configurations/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -320,12 +387,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PhotoSearch/Info.plist;
+				INFOPLIST_FILE = PhotoSearch/Configurations/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
