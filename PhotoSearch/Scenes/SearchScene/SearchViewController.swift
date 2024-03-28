@@ -217,11 +217,13 @@ private extension SearchViewController {
 		isSearched = true
 		layout()
 		clearSearchResults()
+		searchField.resignFirstResponder()
 		activityIndicator.startAnimating()
 		
 		NetworkManager.getImagesUrls(about: searchField.text!) { [weak self] photoUrls in
 			switch photoUrls {
 			case .success(let photoUrls):
+				
 				DispatchQueue.main.async {
 					self?.imageUrls = photoUrls
 					if photoUrls.results.isEmpty {

@@ -25,13 +25,17 @@ struct NetworkManager {
 	enum NetworkErrors: Error {
 		case transportError(Error)
 		case decoderError(Error)
+		case wrongClientID
 		case wrongURL
 		case noData
 	}
 	
 	static func getImagesUrls(about request: String, completion: @escaping(Result<PhotoUrls, NetworkErrors>) -> Void) {
+		guard let clientID = ProcessInfo.processInfo.environment["CLIENT_ID"] else {
+			return completion(.failure(.wrongClientID))
+		}
 		
-		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=20&client_id=Ip0XA55zY7b7-d19osq1L5btGg-YCeDZVpnnJjXqHxs&query="
+		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=20&client_id=\(clientID)&query="
 		guard let url = URL(string: apiPhotoRequest + request.lowercased()) else {
 			return completion(.failure(.wrongURL))
 		}
@@ -73,6 +77,8 @@ extension NetworkManager.NetworkErrors : LocalizedError {
 			return "Ошибка в URL запроса"
 		case .noData:
 			return "Нет данных от сервера"
+		case .wrongClientID:
+			return "Не верно указан Client ID в запросе"
 		}
 	}
 }
