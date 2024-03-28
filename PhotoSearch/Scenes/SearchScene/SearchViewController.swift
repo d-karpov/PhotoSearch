@@ -10,6 +10,10 @@ import UIKit
 import SwiftUI
 #endif
 
+protocol ISearchView: AnyObject {
+	func render(viewData: SearchViewModel.ViewData)
+}
+
 class SearchViewController: UIViewController {
 	
 	private lazy var searchField: UISearchTextField = makeSearchField()
@@ -19,7 +23,10 @@ class SearchViewController: UIViewController {
 	private lazy var activityIndicator: UIActivityIndicatorView = makeActivityIndicator()
 	private lazy var nonResultLable: UILabel = makeNonResultLabel()
 	private var imageUrls: PhotoUrls?
-	private var isSearched = false
+	
+	var presenter: ISearchViewPresenter!
+	var viewData: SearchViewModel.ViewData!
+	
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -35,21 +42,20 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UICollectionViewDataSource {
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		guard let count = imageUrls?.results.count else { return 0 }
-		return count
+		if viewData == nil {
+			return 0
+		} else {
+			return viewData.images.count
+		}
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as! PhotoCell
-		if let url = imageUrls?.results[indexPath.item].urls.regular {
-			do {
-				let data = try Data(contentsOf: url)
-				cell.configure(UIImage(data: data)!)
-			} catch {
-				print("Проблема при распаковке картинки ячейку")
+		if let images = viewData?.images {
+			if let image = UIImage(data: images[indexPath.item]) {
+				cell.configure(image)
 			}
 		}
-		
 		return cell
 	}
 	
@@ -75,7 +81,8 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 extension SearchViewController: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		textField.resignFirstResponder()
-		fetchImageUrls()
+		searchStarted()
+		presenter.search(request: textField.text!)
 		return true
 	}
 }
@@ -85,7 +92,6 @@ private extension SearchViewController {
 	
 	func setupUI() {
 		layout()
-		setSearchActions()
 		view.backgroundColor = .white
 		searchResult.backgroundColor = .white
 	}
@@ -106,7 +112,7 @@ private extension SearchViewController {
 		NSLayoutConstraint.activate([
 			searchBar.topAnchor.constraint(
 				equalTo: view.safeAreaLayoutGuide.topAnchor,
-				constant: isSearched ? 0 : view.bounds.height/4
+				constant: viewData != nil ? 0 : view.bounds.height/4
 			),
 			searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 			searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -160,7 +166,7 @@ private extension SearchViewController {
 		configuration.title = "Найти"
 		
 		let searchButton = UIButton(configuration: configuration)
-		
+		searchButton.addTarget(self, action: #selector(searchStarted), for: .touchUpInside)
 		return searchButton
 	}
 	
@@ -203,40 +209,18 @@ private extension SearchViewController {
 		return layout
 	}
 	
-	func setSearchActions() {
-		searchButton.addTarget(self, action: #selector(fetchImageUrls), for: .touchUpInside)
-	}
-	
-	func clearSearchResults() {
-		imageUrls = nil
-		nonResultLable.isHidden = true
-		searchResult.reloadData()
-	}
-	
-	@objc func fetchImageUrls() {
-		isSearched = true
-		layout()
-		clearSearchResults()
-		searchField.resignFirstResponder()
+	@objc func searchStarted() {
 		activityIndicator.startAnimating()
-		
-		NetworkManager.getImagesUrls(about: searchField.text!) { [weak self] photoUrls in
-			switch photoUrls {
-			case .success(let photoUrls):
-				
-				DispatchQueue.main.async {
-					self?.imageUrls = photoUrls
-					if photoUrls.results.isEmpty {
-						self?.nonResultLable.isHidden = false
-					}
-					self?.searchResult.reloadData()
-					self?.activityIndicator.stopAnimating()
-				}
-			case .failure(let error):
-				print("\(error.errorDescription ?? "Бесовство")")
-			}
-		}
-		
+		presenter.search(request: searchField.text!)
+	}
+}
+
+extension SearchViewController: ISearchView {
+	func render(viewData: SearchViewModel.ViewData) {
+		layout()
+		searchField.resignFirstResponder()
+		activityIndicator.stopAnimating()
+		searchResult.reloadData()
 	}
 }
 

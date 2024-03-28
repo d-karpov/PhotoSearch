@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D3022E192BABA04D00414A2A /* PhotoCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3022E182BABA04D00414A2A /* PhotoCellView.swift */; };
+		D3CB1E072BB5D83B00AAEC00 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB1E062BB5D83B00AAEC00 /* SearchViewModel.swift */; };
+		D3CB1E092BB5DC1C00AAEC00 /* SearchViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB1E082BB5DC1C00AAEC00 /* SearchViewPresenter.swift */; };
 		D3D238B22BAACC8F000D266C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238B12BAACC8F000D266C /* AppDelegate.swift */; };
 		D3D238B42BAACC8F000D266C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238B32BAACC8F000D266C /* SceneDelegate.swift */; };
 		D3D238BB2BAACC90000D266C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3D238BA2BAACC90000D266C /* Assets.xcassets */; };
@@ -20,6 +22,8 @@
 
 /* Begin PBXFileReference section */
 		D3022E182BABA04D00414A2A /* PhotoCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCellView.swift; sourceTree = "<group>"; };
+		D3CB1E062BB5D83B00AAEC00 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		D3CB1E082BB5DC1C00AAEC00 /* SearchViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewPresenter.swift; sourceTree = "<group>"; };
 		D3D238AE2BAACC8F000D266C /* PhotoSearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D238B12BAACC8F000D266C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3D238B32BAACC8F000D266C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +116,8 @@
 			children = (
 				D3D238CD2BAB13AD000D266C /* SearchViewController.swift */,
 				D3022E182BABA04D00414A2A /* PhotoCellView.swift */,
+				D3CB1E062BB5D83B00AAEC00 /* SearchViewModel.swift */,
+				D3CB1E082BB5DC1C00AAEC00 /* SearchViewPresenter.swift */,
 			);
 			path = SearchScene;
 			sourceTree = "<group>";
@@ -212,7 +218,9 @@
 			files = (
 				D3FB64A32BB1DC7F00C221DD /* NetworkManager.swift in Sources */,
 				D3022E192BABA04D00414A2A /* PhotoCellView.swift in Sources */,
+				D3CB1E072BB5D83B00AAEC00 /* SearchViewModel.swift in Sources */,
 				D3D238CE2BAB13AD000D266C /* SearchViewController.swift in Sources */,
+				D3CB1E092BB5DC1C00AAEC00 /* SearchViewPresenter.swift in Sources */,
 				D3D238B22BAACC8F000D266C /* AppDelegate.swift in Sources */,
 				D3D238B42BAACC8F000D266C /* SceneDelegate.swift in Sources */,
 				D3D238D32BAB1599000D266C /* UIViewController+Preview.swift in Sources */,
