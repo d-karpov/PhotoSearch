@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SwiftUI
 
 class DetailViewController: UIViewController {
 	
@@ -31,14 +30,3 @@ class DetailViewController: UIViewController {
 	}
 }
 
-
-// MARK: - PreviewProvider
-#if DEBUG
-struct DetailViewControllerProvider: PreviewProvider {
-	static var previews: some View {
-		Group {
-			DetailViewController().preview()
-		}
-	}
-}
-#endif

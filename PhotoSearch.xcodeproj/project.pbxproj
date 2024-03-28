@@ -15,7 +15,6 @@
 		D3D238BB2BAACC90000D266C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3D238BA2BAACC90000D266C /* Assets.xcassets */; };
 		D3D238BE2BAACC90000D266C /* Base in Resources */ = {isa = PBXBuildFile; fileRef = D3D238BD2BAACC90000D266C /* Base */; };
 		D3D238CE2BAB13AD000D266C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238CD2BAB13AD000D266C /* SearchViewController.swift */; };
-		D3D238D32BAB1599000D266C /* UIViewController+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238D22BAB1599000D266C /* UIViewController+Preview.swift */; };
 		D3FB64A32BB1DC7F00C221DD /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB64A22BB1DC7F00C221DD /* NetworkManager.swift */; };
 		D3FB64A52BB2267900C221DD /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB64A42BB2267800C221DD /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
@@ -31,7 +30,6 @@
 		D3D238BD2BAACC90000D266C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D3D238BF2BAACC90000D266C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D3D238CD2BAB13AD000D266C /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
-		D3D238D22BAB1599000D266C /* UIViewController+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Preview.swift"; sourceTree = "<group>"; };
 		D3FB64A22BB1DC7F00C221DD /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		D3FB64A42BB2267800C221DD /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -67,7 +65,6 @@
 			isa = PBXGroup;
 			children = (
 				D3FB64A12BB1DC5A00C221DD /* Network */,
-				D3D238CF2BAB1558000D266C /* Extensions */,
 				D3D238C82BAACCFC000D266C /* Scenes */,
 				D3D238C72BAACCE8000D266C /* Storyboards */,
 				D3D238C62BAACCD0000D266C /* Resources */,
@@ -128,14 +125,6 @@
 				D3FB64A42BB2267800C221DD /* DetailViewController.swift */,
 			);
 			path = DetailScene;
-			sourceTree = "<group>";
-		};
-		D3D238CF2BAB1558000D266C /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				D3D238D22BAB1599000D266C /* UIViewController+Preview.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		D3FB64A12BB1DC5A00C221DD /* Network */ = {
@@ -223,7 +212,6 @@
 				D3CB1E092BB5DC1C00AAEC00 /* SearchViewPresenter.swift in Sources */,
 				D3D238B22BAACC8F000D266C /* AppDelegate.swift in Sources */,
 				D3D238B42BAACC8F000D266C /* SceneDelegate.swift in Sources */,
-				D3D238D32BAB1599000D266C /* UIViewController+Preview.swift in Sources */,
 				D3FB64A52BB2267900C221DD /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

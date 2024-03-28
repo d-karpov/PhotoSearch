@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if DEBUG
-import SwiftUI
-#endif
 
 protocol ISearchView: AnyObject {
 	func render(viewData: SearchViewModel.ViewData)
@@ -19,10 +16,10 @@ class SearchViewController: UIViewController {
 	private lazy var searchField: UISearchTextField = makeSearchField()
 	private lazy var searchButton: UIButton = makeSearchButton()
 	private lazy var searchBar: UIStackView = makeSearchBar()
-	private lazy var searchResult: UICollectionView = makeSearchResult()
+	private lazy var searchResult: UICollectionView = makeSearchResultCollection()
 	private lazy var activityIndicator: UIActivityIndicatorView = makeActivityIndicator()
 	private lazy var nonResultLable: UILabel = makeNonResultLabel()
-	private var imageUrls: PhotoUrls?
+	private lazy var isSearched = false
 	
 	var presenter: ISearchViewPresenter!
 	var viewData: SearchViewModel.ViewData!
@@ -30,6 +27,7 @@ class SearchViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		presenter.viewIsReady()
 		setupUI()
 		searchResult.dataSource = self
 		searchResult.delegate = self
@@ -40,24 +38,20 @@ class SearchViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource
 extension SearchViewController: UICollectionViewDataSource {
-
+	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if viewData == nil {
-			return 0
-		} else {
-			return viewData.images.count
-		}
+		viewData.cellsCount
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as! PhotoCell
-		if let images = viewData?.images {
-			if let image = UIImage(data: images[indexPath.item]) {
-				cell.configure(image)
-			}
+		if let image = UIImage(data: viewData.images[indexPath.item]) {
+			cell.configure(image)
+			activityIndicator.stopAnimating()
 		}
 		return cell
 	}
+	
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let detailImageView = DetailViewController()
@@ -78,11 +72,10 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
 	}
 }
 
+// MARK: - UITextFieldDelegate
 extension SearchViewController: UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		textField.resignFirstResponder()
 		searchStarted()
-		presenter.search(request: textField.text!)
 		return true
 	}
 }
@@ -103,21 +96,12 @@ private extension SearchViewController {
 		view.addSubview(searchResult)
 		view.addSubview(activityIndicator)
 		view.addSubview(nonResultLable)
-		
 		layoutConstraints()
 	}
 	
 	func layoutConstraints() {
 		
-		NSLayoutConstraint.activate([
-			searchBar.topAnchor.constraint(
-				equalTo: view.safeAreaLayoutGuide.topAnchor,
-				constant: viewData != nil ? 0 : view.bounds.height/4
-			),
-			searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-			searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-			searchBar.heightAnchor.constraint(equalToConstant: 50)
-		])
+		layoutConstraintsForSearchBar()
 		
 		NSLayoutConstraint.activate([
 			searchResult.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
@@ -134,6 +118,18 @@ private extension SearchViewController {
 		
 	}
 	
+	func layoutConstraintsForSearchBar() {
+		NSLayoutConstraint.activate([
+			searchBar.topAnchor.constraint(
+				equalTo: view.safeAreaLayoutGuide.topAnchor,
+				constant: isSearched ? 0 : view.bounds.height/4
+			),
+			searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+			searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+			searchBar.heightAnchor.constraint(equalToConstant: 50)
+		])
+	}
+	
 	func makeActivityIndicator() -> UIActivityIndicatorView {
 		let indicator = UIActivityIndicatorView(style: .large)
 		indicator.color = .darkGray
@@ -144,7 +140,7 @@ private extension SearchViewController {
 	
 	func makeSearchField() -> UISearchTextField {
 		let searchField = UISearchTextField()
-
+		
 		searchField.placeholder = "Телефоны, яблоки, груши, снег"
 		searchField.backgroundColor = .white
 		searchField.returnKeyType = .search
@@ -178,12 +174,18 @@ private extension SearchViewController {
 		searchBar.alignment = .fill
 		searchBar.distribution = .fill
 		searchBar.spacing = 8
-
+		
 		return searchBar
 	}
 	
-	func makeSearchResult() -> UICollectionView {
-		let searchResult = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
+	func createCollectionLayout() -> UICollectionViewLayout {
+		let layout = UICollectionViewFlowLayout()
+		layout.minimumInteritemSpacing = 6
+		return layout
+	}
+	
+	func makeSearchResultCollection() -> UICollectionView {
+		let searchResult = UICollectionView(frame: .zero, collectionViewLayout: createCollectionLayout())
 		searchResult.translatesAutoresizingMaskIntoConstraints = false
 		
 		searchResult.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.identifier)
@@ -203,35 +205,32 @@ private extension SearchViewController {
 		return label
 	}
 	
-	func createLayout() -> UICollectionViewLayout {
-		let layout = UICollectionViewFlowLayout()
-		layout.minimumInteritemSpacing = 6
-		return layout
+	func changeUiWhenSearchStarted() {
+		isSearched = true
+		layoutConstraintsForSearchBar()
+		nonResultLable.isHidden = true
+		activityIndicator.startAnimating()
+		searchField.resignFirstResponder()
+	}
+	
+	func showSearchResult() {
+		if viewData.images.isEmpty {
+			activityIndicator.stopAnimating()
+			nonResultLable.isHidden = false
+		} else {
+			searchResult.reloadData()
+		}
 	}
 	
 	@objc func searchStarted() {
-		activityIndicator.startAnimating()
+		changeUiWhenSearchStarted()
 		presenter.search(request: searchField.text!)
 	}
 }
 
 extension SearchViewController: ISearchView {
 	func render(viewData: SearchViewModel.ViewData) {
-		layout()
-		searchField.resignFirstResponder()
-		activityIndicator.stopAnimating()
-		searchResult.reloadData()
+		self.viewData = viewData
+		showSearchResult()
 	}
 }
-
-
-// MARK: - PreviewProvider
-#if DEBUG
-struct SearchViewControllerProvider: PreviewProvider {
-	static var previews: some View {
-		Group {
-			SearchViewController().preview()
-		}
-	}
-}
-#endif

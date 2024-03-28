@@ -8,6 +8,7 @@
 import Foundation
 
 protocol ISearchViewPresenter {
+	func viewIsReady()
 	func search(request: String)
 }
 
@@ -20,30 +21,32 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		self.view = view
 	}
 	
-	func search(request: String) {
-		let images = fetchImages(request: request)
-		let viewData = SearchViewModel.ViewData(images: images)
-		view?.render(viewData: viewData)
+	func viewIsReady() {
+		view?.render(viewData: SearchViewModel.ViewData(images: [Data()], cellsCount: 0))
 	}
 	
-	private func fetchImages(request: String) -> [Data] {
-		var photosData: [Data] = [Data()]
+	func search(request: String) {
+		viewIsReady()
 		NetworkManager.getImagesUrls(about: request) { photoUrls in
 			switch photoUrls {
 			case .success(let photoUrls):
-				photosData = photoUrls.results.map { result in
-					var data = Data()
-					do {
-						data = try Data(contentsOf: result.urls.regular)
-					} catch {
-						print("\(error.localizedDescription)")
+				DispatchQueue.main.async {
+					let images = photoUrls.results.map { result in
+						var data = Data()
+						do {
+							data = try Data(contentsOf: result.urls.regular)
+						} catch {
+							print("\(error.localizedDescription)")
+						}
+						return data
 					}
-					return data
+					let viewData = SearchViewModel.ViewData(images: images, cellsCount: images.count)
+					self.view?.render(viewData: viewData)
 				}
 			case .failure(let error):
 				print("\(error.errorDescription ?? "Бесовство")")
 			}
 		}
-		return photosData
 	}
+
 }

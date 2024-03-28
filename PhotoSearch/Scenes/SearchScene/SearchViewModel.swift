@@ -12,6 +12,7 @@ struct SearchViewModel {
 	
 	struct ViewData {
 		let images: [Data]
+		let cellsCount: Int
 	}
 
 }
