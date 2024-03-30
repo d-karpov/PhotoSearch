@@ -8,7 +8,11 @@
 import UIKit
 
 protocol ISearchView: AnyObject {
-	func render(viewData: SearchViewModel.ViewData)
+	func setupIU()
+	func shiftSearchBar()
+	func startLoading()
+	func showNonResultLabel()
+	func showResults()
 }
 
 class SearchViewController: UIViewController {
@@ -19,16 +23,12 @@ class SearchViewController: UIViewController {
 	private lazy var searchResult: UICollectionView = makeSearchResultCollection()
 	private lazy var activityIndicator: UIActivityIndicatorView = makeActivityIndicator()
 	private lazy var nonResultLable: UILabel = makeNonResultLabel()
-	private lazy var isSearched = false
 	
 	var presenter: ISearchViewPresenter!
-	var viewData: SearchViewModel.ViewData!
-	
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		presenter.viewIsReady()
-		setupUI()
 		searchResult.dataSource = self
 		searchResult.delegate = self
 		searchField.delegate = self
@@ -40,22 +40,19 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UICollectionViewDataSource {
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		viewData.cellsCount
+		presenter.cellsCount()
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as! PhotoCell
-		if let image = UIImage(data: viewData.images[indexPath.item]) {
-			cell.configure(image)
-			activityIndicator.stopAnimating()
-		}
+		presenter.prepareCell(at: indexPath, cell: cell)
 		return cell
 	}
-	
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let detailImageView = DetailViewController()
 		let cell = collectionView.cellForItem(at: indexPath) as! PhotoCell
+		// TODO: Move to the router at it should be
 		detailImageView.imageView.image = cell.imageView.image
 		detailImageView.modalPresentationStyle = .pageSheet
 		present(detailImageView, animated: true)
@@ -83,12 +80,6 @@ extension SearchViewController: UITextFieldDelegate {
 // MARK: - Private extension for UI methods
 private extension SearchViewController {
 	
-	func setupUI() {
-		layout()
-		view.backgroundColor = .white
-		searchResult.backgroundColor = .white
-	}
-	
 	func layout() {
 		view.addSubview(searchBar)
 		searchBar.addArrangedSubview(searchField)
@@ -96,12 +87,17 @@ private extension SearchViewController {
 		view.addSubview(searchResult)
 		view.addSubview(activityIndicator)
 		view.addSubview(nonResultLable)
-		layoutConstraints()
+		setupConstraints()
 	}
 	
-	func layoutConstraints() {
+	func setupConstraints() {
 		
-		layoutConstraintsForSearchBar()
+		NSLayoutConstraint.activate([
+			searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant:view.bounds.height/4),
+			searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+			searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+			searchBar.heightAnchor.constraint(equalToConstant: 50)
+		])
 		
 		NSLayoutConstraint.activate([
 			searchResult.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
@@ -116,18 +112,6 @@ private extension SearchViewController {
 			nonResultLable.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 		])
 		
-	}
-	
-	func layoutConstraintsForSearchBar() {
-		NSLayoutConstraint.activate([
-			searchBar.topAnchor.constraint(
-				equalTo: view.safeAreaLayoutGuide.topAnchor,
-				constant: isSearched ? 0 : view.bounds.height/4
-			),
-			searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-			searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-			searchBar.heightAnchor.constraint(equalToConstant: 50)
-		])
 	}
 	
 	func makeActivityIndicator() -> UIActivityIndicatorView {
@@ -205,32 +189,41 @@ private extension SearchViewController {
 		return label
 	}
 	
-	func changeUiWhenSearchStarted() {
-		isSearched = true
-		layoutConstraintsForSearchBar()
-		nonResultLable.isHidden = true
-		activityIndicator.startAnimating()
-		searchField.resignFirstResponder()
-	}
-	
-	func showSearchResult() {
-		if viewData.images.isEmpty {
-			activityIndicator.stopAnimating()
-			nonResultLable.isHidden = false
-		} else {
-			searchResult.reloadData()
-		}
+	func stopLoading() {
+		activityIndicator.stopAnimating()
 	}
 	
 	@objc func searchStarted() {
-		changeUiWhenSearchStarted()
 		presenter.search(request: searchField.text!)
 	}
 }
 
 extension SearchViewController: ISearchView {
-	func render(viewData: SearchViewModel.ViewData) {
-		self.viewData = viewData
-		showSearchResult()
+	func setupIU() {
+		layout()
+		view.backgroundColor = .white
+		searchResult.backgroundColor = .white
+	}
+	
+	func shiftSearchBar() {
+		searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+	}
+	
+	func startLoading() {
+		nonResultLable.isHidden = true
+		searchResult.isHidden = true
+		activityIndicator.startAnimating()
+		searchField.resignFirstResponder()
+	}
+	
+	func showNonResultLabel() {
+		stopLoading()
+		nonResultLable.isHidden = false
+	}
+	
+	func showResults() {
+		stopLoading()
+		searchResult.isHidden = false
+		searchResult.reloadData()
 	}
 }
