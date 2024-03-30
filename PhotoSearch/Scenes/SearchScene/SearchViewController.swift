@@ -25,6 +25,7 @@ class SearchViewController: UIViewController {
 	private lazy var nonResultLable: UILabel = makeNonResultLabel()
 	
 	var presenter: ISearchViewPresenter!
+	var router: ISearchViewRouter!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -50,12 +51,10 @@ extension SearchViewController: UICollectionViewDataSource {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let detailImageView = DetailViewController()
 		let cell = collectionView.cellForItem(at: indexPath) as! PhotoCell
-		// TODO: Move to the router at it should be
-		detailImageView.imageView.image = cell.imageView.image
-		detailImageView.modalPresentationStyle = .pageSheet
-		present(detailImageView, animated: true)
+		if let image = cell.imageView.image {
+			router.showDetailScene(of: image)
+		}
 	}
 	
 }

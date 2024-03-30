@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D3022E192BABA04D00414A2A /* PhotoCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3022E182BABA04D00414A2A /* PhotoCellView.swift */; };
+		D36E8DC22BB89A2800C9A587 /* SearchViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36E8DC12BB89A2800C9A587 /* SearchViewRouter.swift */; };
 		D3CB1E092BB5DC1C00AAEC00 /* SearchViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB1E082BB5DC1C00AAEC00 /* SearchViewPresenter.swift */; };
 		D3D238B22BAACC8F000D266C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238B12BAACC8F000D266C /* AppDelegate.swift */; };
 		D3D238B42BAACC8F000D266C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D238B32BAACC8F000D266C /* SceneDelegate.swift */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		D3022E182BABA04D00414A2A /* PhotoCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCellView.swift; sourceTree = "<group>"; };
+		D36E8DC12BB89A2800C9A587 /* SearchViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewRouter.swift; sourceTree = "<group>"; };
 		D3CB1E082BB5DC1C00AAEC00 /* SearchViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewPresenter.swift; sourceTree = "<group>"; };
 		D3D238AE2BAACC8F000D266C /* PhotoSearch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSearch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D238B12BAACC8F000D266C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -43,6 +45,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D36E8DC32BB8A48F00C9A587 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D3022E182BABA04D00414A2A /* PhotoCellView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		D3D238A52BAACC8F000D266C = {
 			isa = PBXGroup;
 			children = (
@@ -109,9 +119,10 @@
 		D3D238C92BAB09D1000D266C /* SearchScene */ = {
 			isa = PBXGroup;
 			children = (
+				D36E8DC32BB8A48F00C9A587 /* Views */,
 				D3D238CD2BAB13AD000D266C /* SearchViewController.swift */,
-				D3022E182BABA04D00414A2A /* PhotoCellView.swift */,
 				D3CB1E082BB5DC1C00AAEC00 /* SearchViewPresenter.swift */,
+				D36E8DC12BB89A2800C9A587 /* SearchViewRouter.swift */,
 			);
 			path = SearchScene;
 			sourceTree = "<group>";
@@ -205,6 +216,7 @@
 				D3FB64A32BB1DC7F00C221DD /* NetworkManager.swift in Sources */,
 				D3022E192BABA04D00414A2A /* PhotoCellView.swift in Sources */,
 				D3D238CE2BAB13AD000D266C /* SearchViewController.swift in Sources */,
+				D36E8DC22BB89A2800C9A587 /* SearchViewRouter.swift in Sources */,
 				D3CB1E092BB5DC1C00AAEC00 /* SearchViewPresenter.swift in Sources */,
 				D3D238B22BAACC8F000D266C /* AppDelegate.swift in Sources */,
 				D3D238B42BAACC8F000D266C /* SceneDelegate.swift in Sources */,
