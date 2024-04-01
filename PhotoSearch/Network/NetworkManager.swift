@@ -9,13 +9,13 @@ import Foundation
 
 
 struct PhotoUrls: Codable {
-	let results: [result]
+	let results: [Result]
 	
-	struct result: Codable {
-		let urls: url
+	struct Result: Codable {
+		let urls: Url
 	}
 	
-	struct url: Codable {
+	struct Url: Codable {
 		let regular: URL
 	}
 }
@@ -35,7 +35,7 @@ struct NetworkManager {
 			return completion(.failure(.wrongClientID))
 		}
 		
-		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=15&client_id=\(clientID)&query="
+		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=27&client_id=\(clientID)&query="
 		guard let url = URL(string: apiPhotoRequest + request.lowercased()) else {
 			return completion(.failure(.wrongURL))
 		}
