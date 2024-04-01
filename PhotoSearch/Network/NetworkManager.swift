@@ -35,7 +35,7 @@ struct NetworkManager {
 			return completion(.failure(.wrongClientID))
 		}
 		
-		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=20&client_id=\(clientID)&query="
+		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=15&client_id=\(clientID)&query="
 		guard let url = URL(string: apiPhotoRequest + request.lowercased()) else {
 			return completion(.failure(.wrongURL))
 		}
@@ -49,7 +49,8 @@ struct NetworkManager {
 			}
 			
 			guard let data = data else {
-				return completion(.failure(.noData))}
+				return completion(.failure(.noData))
+			}
 			
 			do {
 				let decoder = JSONDecoder()
@@ -58,6 +59,25 @@ struct NetworkManager {
 			} catch {
 				return completion(.failure(.decoderError(error)))
 			}
+		}
+		
+		task.resume()
+	}
+	
+	static func fetchImageData(from url: URL, completion: @escaping(Result<Data, NetworkErrors>) -> Void) {
+		
+		let session = URLSession.shared
+		let task = session.dataTask(with: url) { data, _, error in
+			
+			if let error = error {
+				return completion(.failure(.transportError(error)))
+			}
+			
+			guard let data = data else {
+				return completion(.failure(.noData))
+			}
+			
+			return completion(.success(data))
 		}
 		
 		task.resume()

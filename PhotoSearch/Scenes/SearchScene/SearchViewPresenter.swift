@@ -19,12 +19,12 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	
 	private weak var view: ISearchView?
 	
-	private var images: [Data]
+	private var images: [UIImage]
 	private var firstSearch = false
 	
 	init(view: ISearchView) {
 		self.view = view
-		self.images = [Data()]
+		self.images = []
 	}
 	
 	func viewIsReady() {
@@ -36,8 +36,8 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	}
 	
 	func prepareCell(at indexPath: IndexPath, cell: PhotoCell) {
-		if !images.isEmpty, let image = UIImage(data: images[indexPath.item]) {
-			cell.configure(image)
+		if !images.isEmpty {
+			cell.configure(images[indexPath.item])
 		}
 	}
 	
@@ -47,24 +47,12 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		NetworkManager.getImagesUrls(about: request) { photoUrls in
 			switch photoUrls {
 			case .success(let photoUrls):
-		
-				self.images = photoUrls.results.map { result in
-					var data = Data()
-					do {
-						data = try Data(contentsOf: result.urls.regular)
-					} catch {
-						print("\(error.localizedDescription)")
-					}
-					return data
+				let imageURL = photoUrls.results.map { result in
+					result.urls.regular
 				}
-				
-				DispatchQueue.main.async {
-					if self.images.isEmpty {
-						self.view?.showNonResultLabel()
-					} else {
-						self.view?.showResults()
-					}
-			
+				ImageCacheManager.shared.getImages(urls: imageURL) { images in
+					self.images = images
+					self.updateView()
 				}
 			case .failure(let error):
 				print("\(error.errorDescription ?? "Бесовство")")
@@ -78,5 +66,14 @@ final class SearchViewPresenter: ISearchViewPresenter {
 			firstSearch.toggle()
 		}
 	}
-
+	
+	private func updateView() {
+		DispatchQueue.main.async {
+			if self.images.isEmpty {
+				self.view?.showNonResultLabel()
+			} else {
+				self.view?.showResults()
+			}
+		}
+	}
 }
