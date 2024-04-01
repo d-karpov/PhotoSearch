@@ -55,7 +55,7 @@ final class SearchViewPresenter: ISearchViewPresenter {
 					self.updateView()
 				}
 			case .failure(let error):
-				print("\(error.localizedDescription)")
+				self.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")
 			}
 		}
 	}
@@ -74,6 +74,12 @@ final class SearchViewPresenter: ISearchViewPresenter {
 			} else {
 				self.view?.showResults()
 			}
+		}
+	}
+	
+	private func showAlert(title: String, with message: String) {
+		DispatchQueue.main.async {
+			self.view?.showAlert(title: title, with: message)
 		}
 	}
 }

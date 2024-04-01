@@ -13,7 +13,7 @@ final class ImageCacheManager {
 	
 	static var shared = ImageCacheManager()
 	
-	private var imageCache: [String : Data] = [:]
+	private let cache = NSCache<NSString, NSData>()
 	private let imageGroup = DispatchGroup()
 	
 	func getImages(urls: [URL], completion: @escaping([UIImage]) -> Void) {
@@ -33,8 +33,8 @@ final class ImageCacheManager {
 	
 	private func checkCache(of url: URL) -> UIImage? {
 		guard let key = escapingURL(url: url.absoluteString),
-			  let data = imageCache[key],
-			  let image = UIImage(data: data)
+			  let data = cache.object(forKey: key as NSString),
+			  let image = UIImage(data: data as Data)
 		else {
 			loadImageData(of: url)
 			return nil
@@ -43,14 +43,15 @@ final class ImageCacheManager {
 	}
 	
 	private func loadImageData(of url: URL) {
-		if let key = self.escapingURL(url: url.absoluteString), imageCache[key] == nil {
+		if let key = self.escapingURL(url: url.absoluteString), cache.object(forKey: key as NSString) == nil {
 			imageGroup.enter()
 			NetworkManager.fetchImageData(from: url) { result in
 				switch result {
 				case .success(let data):
-					self.imageCache[key] = data
+					self.cache.setObject(data as NSData, forKey: key as NSString)
 					self.imageGroup.leave()
 				case .failure(let error):
+					// TODO: Indication for User
 					print("\(error.localizedDescription)")
 				}
 			}

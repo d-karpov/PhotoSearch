@@ -13,6 +13,7 @@ protocol ISearchView: AnyObject {
 	func startLoading()
 	func showNonResultLabel()
 	func showResults()
+	func showAlert(title: String, with message: String)
 }
 
 class SearchViewController: UIViewController {
@@ -195,6 +196,13 @@ private extension SearchViewController {
 	@objc func searchStarted() {
 		presenter.search(request: searchField.text!)
 	}
+	
+	func callAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+		let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+		alert.addAction(alertAction)
+		present(alert, animated: true, completion: nil)
+	}
 }
 
 extension SearchViewController: ISearchView {
@@ -224,5 +232,10 @@ extension SearchViewController: ISearchView {
 		stopLoading()
 		searchResult.isHidden = false
 		searchResult.reloadData()
+	}
+	
+	func showAlert(title: String, with message: String) {
+		stopLoading()
+		callAlert(title: title, message: message)
 	}
 }
