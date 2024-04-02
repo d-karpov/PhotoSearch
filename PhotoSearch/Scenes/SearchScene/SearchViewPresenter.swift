@@ -44,18 +44,18 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	func search(request: String) {
 		checkFirstSearch()
 		view?.startLoading()
-		NetworkManager.getImagesUrls(about: request) { photoUrls in
+		NetworkManager.getImagesUrls(about: request) { [weak self] photoUrls in
 			switch photoUrls {
 			case .success(let photoUrls):
 				let imageUrls = photoUrls.results.map { result in
 					result.urls.regular
 				}
 				ImageCacheManager.shared.getImages(urls: imageUrls) { images in
-					self.images = images
-					self.updateView()
+					self?.images = images
+					self?.updateView()
 				}
 			case .failure(let error):
-				self.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")
+				self?.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")
 			}
 		}
 	}

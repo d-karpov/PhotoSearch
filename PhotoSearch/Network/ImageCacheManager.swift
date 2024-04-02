@@ -45,11 +45,11 @@ final class ImageCacheManager {
 	private func loadImageData(of url: URL) {
 		if let key = self.escapingURL(url: url.absoluteString), cache.object(forKey: key as NSString) == nil {
 			imageGroup.enter()
-			NetworkManager.fetchImageData(from: url) { result in
+			NetworkManager.fetchImageData(from: url) { [weak self] result in
 				switch result {
 				case .success(let data):
-					self.cache.setObject(data as NSData, forKey: key as NSString)
-					self.imageGroup.leave()
+					self?.cache.setObject(data as NSData, forKey: key as NSString)
+					self?.imageGroup.leave()
 				case .failure(let error):
 					// TODO: Indication for User
 					print("\(error.localizedDescription)")
