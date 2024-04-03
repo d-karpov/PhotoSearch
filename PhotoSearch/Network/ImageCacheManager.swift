@@ -51,6 +51,7 @@ final class ImageCacheManager {
 					self?.cache.setObject(data as NSData, forKey: key as NSString)
 					self?.imageGroup.leave()
 				case .failure(let error):
+					self?.imageGroup.leave()
 					// TODO: Indication for User
 					print("\(error.localizedDescription)")
 				}
