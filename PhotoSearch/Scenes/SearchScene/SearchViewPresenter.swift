@@ -19,12 +19,12 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	
 	private weak var view: ISearchView?
 	
-	private var images: [UIImage]
+	private var imagesUrls: [URL]
 	private var firstSearch = false
 	
 	init(view: ISearchView) {
 		self.view = view
-		self.images = []
+		self.imagesUrls = []
 	}
 	
 	func viewIsReady() {
@@ -32,12 +32,15 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	}
 	
 	func cellsCount() -> Int {
-		images.count
+		return imagesUrls.count
 	}
 	
 	func prepareCell(at indexPath: IndexPath, cell: PhotoCell) {
-		if !images.isEmpty {
-			cell.configure(images[indexPath.item])
+		ImageCacheManager.shared.getImage(url: imagesUrls[indexPath.item]) { [weak self] image in
+			cell.configure(image)
+			if indexPath.row >= 6 {
+				self?.view?.showResults()
+			}
 		}
 	}
 	
@@ -47,13 +50,10 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		NetworkManager.getImagesUrls(about: request) { [weak self] photoUrls in
 			switch photoUrls {
 			case .success(let photoUrls):
-				let imageUrls = photoUrls.results.map { result in
+				self?.imagesUrls = photoUrls.results.map { result in
 					result.urls.regular
 				}
-				ImageCacheManager.shared.getImages(urls: imageUrls) { images in
-					self?.images = images
-					self?.updateView()
-				}
+				self?.updateView()
 			case .failure(let error):
 				self?.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")
 			}
@@ -69,10 +69,10 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	
 	private func updateView() {
 		DispatchQueue.main.async {
-			if self.images.isEmpty {
+			if self.imagesUrls.isEmpty {
 				self.view?.showNonResultLabel()
 			} else {
-				self.view?.showResults()
+				self.view?.reloadCollection()
 			}
 		}
 	}

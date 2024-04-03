@@ -13,6 +13,7 @@ protocol ISearchView: AnyObject {
 	func startLoading()
 	func showNonResultLabel()
 	func showResults()
+	func reloadCollection()
 	func showAlert(title: String, with message: String)
 }
 
@@ -231,6 +232,9 @@ extension SearchViewController: ISearchView {
 	func showResults() {
 		stopLoading()
 		searchResult.isHidden = false
+	}
+	
+	func reloadCollection() {
 		searchResult.reloadData()
 	}
 	

@@ -16,18 +16,12 @@ final class ImageCacheManager {
 	private let cache = NSCache<NSString, NSData>()
 	private let imageGroup = DispatchGroup()
 	
-	func getImages(urls: [URL], completion: @escaping([UIImage]) -> Void) {
-		var images: [UIImage] = []
-		urls.forEach { url in
-			loadImageData(of: url)
-		}
-		imageGroup.notify(queue: .global()) {
-			urls.forEach { url in
-				if let image = self.checkCache(of: url) {
-					images.append(image)
-				}
+	func getImage(url: URL, completion: @escaping(UIImage)-> Void) {
+		loadImageData(of: url)
+		imageGroup.notify(queue: .main) {
+			if let image = self.checkCache(of: url) {
+				completion(image)
 			}
-			completion(images)
 		}
 	}
 	
@@ -36,7 +30,6 @@ final class ImageCacheManager {
 			  let data = cache.object(forKey: key as NSString),
 			  let image = UIImage(data: data as Data)
 		else {
-			loadImageData(of: url)
 			return nil
 		}
 		return image
