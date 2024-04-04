@@ -46,6 +46,12 @@ extension SearchViewController: UICollectionViewDataSource {
 		presenter.cellsCount()
 	}
 	
+	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+		if indexPath.item >= presenter.cellsCount() - 1 {
+			presenter.nextPage(request: searchField.text!)
+		}
+	}
+	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as! PhotoCell
 		presenter.prepareCell(at: indexPath, cell: cell)
@@ -194,16 +200,17 @@ private extension SearchViewController {
 		activityIndicator.stopAnimating()
 	}
 	
-	@objc func searchStarted() {
-		presenter.search(request: searchField.text!)
-	}
-	
 	func callAlert(title: String, message: String) {
 		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
 		alert.addAction(alertAction)
 		present(alert, animated: true, completion: nil)
 	}
+	
+	@objc func searchStarted() {
+		presenter.search(request: searchField.text!)
+	}
+	
 }
 
 extension SearchViewController: ISearchView {

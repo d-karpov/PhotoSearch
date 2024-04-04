@@ -10,6 +10,7 @@ import UIKit
 protocol ISearchViewPresenter {
 	func viewIsReady()
 	func search(request: String)
+	func nextPage(request: String)
 	func cellsCount() -> Int
 	func prepareCell(at: IndexPath, cell: PhotoCell)
 }
@@ -21,10 +22,12 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	
 	private var imagesUrls: [URL]
 	private var firstSearch = false
+	private var currentPage: Int
 	
 	init(view: ISearchView) {
 		self.view = view
 		self.imagesUrls = []
+		self.currentPage = 1
 	}
 	
 	func viewIsReady() {
@@ -45,15 +48,34 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	}
 	
 	func search(request: String) {
+		currentPage = 1
 		checkFirstSearch()
 		view?.startLoading()
-		NetworkManager.getImagesUrls(about: request) { [weak self] photoUrls in
+		NetworkManager.getImagesUrls(about: request, page: currentPage) { [weak self] photoUrls in
 			switch photoUrls {
 			case .success(let photoUrls):
 				self?.imagesUrls = photoUrls.results.map { result in
 					result.urls.regular
 				}
 				self?.updateView()
+			case .failure(let error):
+				self?.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")
+			}
+		}
+	}
+	
+	func nextPage(request: String) {
+		currentPage += 1
+		NetworkManager.getImagesUrls(about: request, page: currentPage) { [weak self] photoUrls in
+			switch photoUrls {
+			case .success(let photoUrls):
+				let newPageUrls = photoUrls.results.map { result in
+					result.urls.regular
+				}
+				self?.imagesUrls.append(contentsOf: newPageUrls)
+				DispatchQueue.main.async {
+					self?.view?.reloadCollection()
+				}
 			case .failure(let error):
 				self?.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")
 			}

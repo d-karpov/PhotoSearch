@@ -30,12 +30,16 @@ struct NetworkManager {
 		case noData
 	}
 	
-	static func getImagesUrls(about request: String, completion: @escaping(Result<PhotoUrls, NetworkErrors>) -> Void) {
+	static func getImagesUrls(
+		about request: String,
+		page: Int,
+		completion: @escaping(Result<PhotoUrls, NetworkErrors>) -> Void
+	) {
 		guard let clientID = ProcessInfo.processInfo.environment["CLIENT_ID"] else {
 			return completion(.failure(.wrongClientID))
 		}
 		
-		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=27&client_id=\(clientID)&query="
+		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=20&page=\(page)&client_id=\(clientID)&query="
 		guard let url = URL(string: apiPhotoRequest + request.lowercased()) else {
 			return completion(.failure(.wrongURL))
 		}
