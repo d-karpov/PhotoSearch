@@ -23,6 +23,9 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	private var imagesUrls: [URL]
 	private var firstSearch = false
 	private var currentPage: Int
+	private var itemPointer: Int {
+		(currentPage-1)*NetworkManager.itemPerPage
+	}
 	
 	init(view: ISearchView) {
 		self.view = view
@@ -41,9 +44,7 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	func prepareCell(at indexPath: IndexPath, cell: PhotoCell) {
 		ImageCacheManager.shared.getImage(url: imagesUrls[indexPath.item]) { [weak self] image in
 			cell.configure(image)
-			if indexPath.row >= 6 {
-				self?.view?.showResults()
-			}
+			self?.view?.showResults()
 		}
 	}
 	
@@ -55,7 +56,7 @@ final class SearchViewPresenter: ISearchViewPresenter {
 			switch photoUrls {
 			case .success(let photoUrls):
 				self?.imagesUrls = photoUrls.results.map { result in
-					result.urls.regular
+					result.urls.thumb
 				}
 				self?.updateView()
 			case .failure(let error):
@@ -70,11 +71,18 @@ final class SearchViewPresenter: ISearchViewPresenter {
 			switch photoUrls {
 			case .success(let photoUrls):
 				let newPageUrls = photoUrls.results.map { result in
-					result.urls.regular
+					result.urls.thumb
 				}
 				self?.imagesUrls.append(contentsOf: newPageUrls)
+				
+				let startItem = self?.itemPointer ?? 0
+				let endItem = startItem + NetworkManager.itemPerPage - 1
+				let indexPathsArray = Array(startItem...(endItem)).map { item in
+					IndexPath(item: item, section: 0)
+				}
+				
 				DispatchQueue.main.async {
-					self?.view?.reloadCollection()
+					self?.view?.partialReload(for: indexPathsArray)
 				}
 			case .failure(let error):
 				self?.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")

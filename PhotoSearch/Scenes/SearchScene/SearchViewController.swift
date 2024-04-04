@@ -14,6 +14,7 @@ protocol ISearchView: AnyObject {
 	func showNonResultLabel()
 	func showResults()
 	func reloadCollection()
+	func partialReload(for items: [IndexPath])
 	func showAlert(title: String, with message: String)
 }
 
@@ -248,5 +249,12 @@ extension SearchViewController: ISearchView {
 	func showAlert(title: String, with message: String) {
 		stopLoading()
 		callAlert(title: title, message: message)
+	}
+	
+	func partialReload(for items: [IndexPath]) {
+		searchResult.performBatchUpdates {
+			searchResult.insertItems(at: items)
+			searchResult.reloadItems(at: items)
+		}
 	}
 }

@@ -30,7 +30,7 @@ final class ImageCacheManager {
 			  let data = cache.object(forKey: key as NSString),
 			  let image = UIImage(data: data as Data)
 		else {
-			return nil
+			return .none
 		}
 		return image
 	}

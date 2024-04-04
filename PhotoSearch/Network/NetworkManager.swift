@@ -16,7 +16,7 @@ struct PhotoUrls: Codable {
 	}
 	
 	struct Url: Codable {
-		let regular: URL
+		let thumb: URL
 	}
 }
 
@@ -30,6 +30,8 @@ struct NetworkManager {
 		case noData
 	}
 	
+	static let itemPerPage = 20
+	
 	static func getImagesUrls(
 		about request: String,
 		page: Int,
@@ -39,7 +41,7 @@ struct NetworkManager {
 			return completion(.failure(.wrongClientID))
 		}
 		
-		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=20&page=\(page)&client_id=\(clientID)&query="
+		let apiPhotoRequest = "https://api.unsplash.com/search/photos?per_page=\(itemPerPage)&page=\(page)&client_id=\(clientID)&query="
 		guard let url = URL(string: apiPhotoRequest + request.lowercased()) else {
 			return completion(.failure(.wrongURL))
 		}
