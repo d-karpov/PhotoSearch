@@ -39,6 +39,7 @@ final class ImageCacheManager {
 	private func loadImageData(of photo: Photos.Result, large: Bool) {
 		let id = large ? photo.id + largePostfix : photo.id
 		let url = large ? photo.urls.regular : photo.urls.thumb
+		
 		if cache.object(forKey: id as NSString) == nil {
 			imageGroup.enter()
 			NetworkManager.fetchImageData(from: url) { [weak self] result in

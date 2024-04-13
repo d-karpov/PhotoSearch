@@ -21,7 +21,7 @@ final class SearchViewRouter: ISearchViewRouter {
 	
 	func showDetailScene(of photo: Photos.Result) {
 		let detailView = DetailViewController()
-		ImageCacheManager.shared.getImage(photo: photo, large: true) { image in
+		ImageCacheAtDiskManager.shared.getImage(photo: photo, large: true) { image in
 			detailView.imageView.image = image
 		}
 		detailView.modalPresentationStyle = .pageSheet

@@ -46,7 +46,7 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		guard let photo = photos?.results[indexPath.item] else {
 			return
 		}
-		ImageCacheManager.shared.getImage(photo: photo, large: false) { [weak self] image in
+		ImageCacheAtDiskManager.shared.getImage(photo: photo, large: false) { [weak self] image in
 			cell.configure(image)
 			self?.view?.showResults()
 		}
