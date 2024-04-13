@@ -20,7 +20,7 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	
 	private weak var view: ISearchView?
 	
-	private var imagesUrls: [URL]
+	private var photos: Photos?
 	private var firstSearch = false
 	private var currentPage: Int
 	private var itemPointer: Int {
@@ -29,7 +29,7 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	
 	init(view: ISearchView) {
 		self.view = view
-		self.imagesUrls = []
+		self.photos = nil
 		self.currentPage = 1
 	}
 	
@@ -38,11 +38,14 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	}
 	
 	func cellsCount() -> Int {
-		return imagesUrls.count
+		return photos?.results.count ?? 0
 	}
 	
 	func prepareCell(at indexPath: IndexPath, cell: PhotoCell) {
-		ImageCacheManager.shared.getImage(url: imagesUrls[indexPath.item]) { [weak self] image in
+		guard let photo = photos?.results[indexPath.item] else {
+			return
+		}
+		ImageCacheManager.shared.getImage(photo: photo) { [weak self] image in
 			cell.configure(image)
 			self?.view?.showResults()
 		}
@@ -52,12 +55,10 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		currentPage = 1
 		checkFirstSearch()
 		view?.startLoading()
-		NetworkManager.getImagesUrls(about: request, page: currentPage) { [weak self] photoUrls in
-			switch photoUrls {
-			case .success(let photoUrls):
-				self?.imagesUrls = photoUrls.results.map { result in
-					result.urls.thumb
-				}
+		NetworkManager.getImagesUrls(about: request, page: currentPage) { [weak self] photos in
+			switch photos {
+			case .success(let photos):
+				self?.photos = photos
 				self?.updateView()
 			case .failure(let error):
 				self?.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")
@@ -67,13 +68,11 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	
 	func nextPage(request: String) {
 		currentPage += 1
-		NetworkManager.getImagesUrls(about: request, page: currentPage) { [weak self] photoUrls in
-			switch photoUrls {
-			case .success(let photoUrls):
-				let newPageUrls = photoUrls.results.map { result in
-					result.urls.thumb
-				}
-				self?.imagesUrls.append(contentsOf: newPageUrls)
+		NetworkManager.getImagesUrls(about: request, page: currentPage) { [weak self] photos in
+			switch photos {
+			case .success(let photos):
+				let newPhotos = photos.results
+				self?.photos?.results.append(contentsOf: newPhotos)
 				
 				let startItem = self?.itemPointer ?? 0
 				let endItem = startItem + NetworkManager.itemPerPage - 1
@@ -98,11 +97,13 @@ final class SearchViewPresenter: ISearchViewPresenter {
 	}
 	
 	private func updateView() {
-		DispatchQueue.main.async {
-			if self.imagesUrls.isEmpty {
-				self.view?.showNonResultLabel()
-			} else {
-				self.view?.reloadCollection()
+		if let photos = self.photos {
+			DispatchQueue.main.async {
+				if photos.results.isEmpty {
+					self.view?.showNonResultLabel()
+				} else {
+					self.view?.reloadCollection()
+				}
 			}
 		}
 	}

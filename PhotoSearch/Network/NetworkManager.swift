@@ -8,14 +8,16 @@
 import Foundation
 
 
-struct PhotoUrls: Codable {
-	let results: [Result]
+struct Photos: Codable {
+	var results: [Result]
 	
 	struct Result: Codable {
+		let id: String
 		let urls: Url
 	}
 	
 	struct Url: Codable {
+		let regular: URL
 		let thumb: URL
 	}
 }
@@ -35,7 +37,7 @@ struct NetworkManager {
 	static func getImagesUrls(
 		about request: String,
 		page: Int,
-		completion: @escaping(Result<PhotoUrls, NetworkErrors>) -> Void
+		completion: @escaping(Result<Photos, NetworkErrors>) -> Void
 	) {
 		guard let clientID = ProcessInfo.processInfo.environment["CLIENT_ID"] else {
 			return completion(.failure(.wrongClientID))
@@ -60,7 +62,7 @@ struct NetworkManager {
 			
 			do {
 				let decoder = JSONDecoder()
-				let photoUrls = try decoder.decode(PhotoUrls.self, from: data)
+				let photoUrls = try decoder.decode(Photos.self, from: data)
 				return completion(.success(photoUrls))
 			} catch {
 				return completion(.failure(.decoderError(error)))
