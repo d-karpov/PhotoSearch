@@ -94,7 +94,7 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		if let photo = photos?.results[indexPath.item] {
 			return photo
 		}
-		return nil
+		return .none
 	}
 	
 	private func checkFirstSearch() {

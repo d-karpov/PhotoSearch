@@ -12,7 +12,7 @@ class ImageCacheAtDiskManager {
 	
 	private let manager = FileManager.default
 	private let imageGroup = DispatchGroup()
-	private let largePostfix = "large"
+	private let largePostfix = "_large"
 	
 	private lazy var cachesURL: URL? = {
 		return manager.urls(for: .cachesDirectory, in: .userDomainMask).first
