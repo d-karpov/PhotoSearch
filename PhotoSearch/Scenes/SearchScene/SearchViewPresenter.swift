@@ -13,6 +13,7 @@ protocol ISearchViewPresenter {
 	func nextPage(request: String)
 	func cellsCount() -> Int
 	func prepareCell(at: IndexPath, cell: PhotoCell)
+	func getPhoto(at: IndexPath) -> Photos.Result?
 }
 
 
@@ -45,7 +46,7 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		guard let photo = photos?.results[indexPath.item] else {
 			return
 		}
-		ImageCacheManager.shared.getImage(photo: photo) { [weak self] image in
+		ImageCacheManager.shared.getImage(photo: photo, large: false) { [weak self] image in
 			cell.configure(image)
 			self?.view?.showResults()
 		}
@@ -87,6 +88,13 @@ final class SearchViewPresenter: ISearchViewPresenter {
 				self?.showAlert(title: "Ошибка", with: "\(error.localizedDescription)")
 			}
 		}
+	}
+	
+	func getPhoto(at indexPath: IndexPath) -> Photos.Result? {
+		if let photo = photos?.results[indexPath.item] {
+			return photo
+		}
+		return nil
 	}
 	
 	private func checkFirstSearch() {

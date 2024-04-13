@@ -60,9 +60,8 @@ extension SearchViewController: UICollectionViewDataSource {
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let cell = collectionView.cellForItem(at: indexPath) as! PhotoCell
-		if let image = cell.imageView.image {
-			router.showDetailScene(of: image)
+		if let photo = presenter.getPhoto(at: indexPath) {
+			router.showDetailScene(of: photo)
 		}
 	}
 	

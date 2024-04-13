@@ -9,7 +9,7 @@ import UIKit
 
 class DetailViewController: UIViewController {
 	
-	let imageView: UIImageView = UIImageView()
+	lazy var imageView: UIImageView = UIImageView()
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()

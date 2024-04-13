@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ISearchViewRouter: AnyObject {
-	func showDetailScene(of image: UIImage)
+	func showDetailScene(of photo: Photos.Result)
 }
 
 final class SearchViewRouter: ISearchViewRouter {
@@ -18,12 +18,13 @@ final class SearchViewRouter: ISearchViewRouter {
 	init(view: UIViewController) {
 		self.view = view
 	}
-
-	func showDetailScene(of image: UIImage) {
+	
+	func showDetailScene(of photo: Photos.Result) {
 		let detailView = DetailViewController()
-		detailView.imageView.image = image
+		ImageCacheManager.shared.getImage(photo: photo, large: true) { image in
+			detailView.imageView.image = image
+		}
 		detailView.modalPresentationStyle = .pageSheet
 		view?.show(detailView, sender: nil)
 	}
 }
-

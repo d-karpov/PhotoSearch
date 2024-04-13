@@ -15,18 +15,20 @@ final class ImageCacheManager {
 	
 	private let cache = NSCache<NSString, NSData>()
 	private let imageGroup = DispatchGroup()
+	private let largePostfix = "large"
 	
-	func getImage(photo: Photos.Result, completion: @escaping(UIImage)-> Void) {
-		loadImageData(of: photo)
+	func getImage(photo: Photos.Result, large: Bool, completion: @escaping(UIImage)-> Void) {
+		let id = large ? photo.id + largePostfix : photo.id
+		loadImageData(of: photo, large: large)
 		imageGroup.notify(queue: .main) {
-			if let image = self.checkCache(of: photo) {
+			if let image = self.checkCache(of: id) {
 				completion(image)
 			}
 		}
 	}
 	
-	private func checkCache(of photo: Photos.Result) -> UIImage? {
-		guard let data = cache.object(forKey: photo.id as NSString),
+	private func checkCache(of id: String) -> UIImage? {
+		guard let data = cache.object(forKey: id as NSString),
 			  let image = UIImage(data: data as Data)
 		else {
 			return .none
@@ -34,13 +36,15 @@ final class ImageCacheManager {
 		return image
 	}
 	
-	private func loadImageData(of photo: Photos.Result) {
-		if cache.object(forKey: photo.id as NSString) == nil {
+	private func loadImageData(of photo: Photos.Result, large: Bool) {
+		let id = large ? photo.id + largePostfix : photo.id
+		let url = large ? photo.urls.regular : photo.urls.thumb
+		if cache.object(forKey: id as NSString) == nil {
 			imageGroup.enter()
-			NetworkManager.fetchImageData(from: photo.urls.thumb) { [weak self] result in
+			NetworkManager.fetchImageData(from: url) { [weak self] result in
 				switch result {
 				case .success(let data):
-					self?.cache.setObject(data as NSData, forKey: photo.id as NSString)
+					self?.cache.setObject(data as NSData, forKey: id as NSString)
 					self?.imageGroup.leave()
 				case .failure(let error):
 					self?.imageGroup.leave()
