@@ -26,10 +26,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private func assemblySearchView() -> UIViewController {
 		let view = SearchViewController()
 		let router = SearchViewRouter(view: view)
-		let presenter = SearchViewPresenter(view: view)
+		let presenter = SearchViewPresenter(view: view, router: router)
 		view.presenter = presenter
-		view.router = router
-		
 		return view
 	}
 }

@@ -13,13 +13,14 @@ protocol ISearchViewPresenter {
 	func nextPage(request: String)
 	func cellsCount() -> Int
 	func prepareCell(at: IndexPath, cell: PhotoCell)
-	func getPhoto(at: IndexPath) -> Photos.Result?
+	func showDetail(at: IndexPath)
 }
 
 
 final class SearchViewPresenter: ISearchViewPresenter {
 	
 	private weak var view: ISearchView?
+	private var router: ISearchViewRouter?
 	
 	private var photos: Photos?
 	private var firstSearch = false
@@ -28,8 +29,11 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		(currentPage-1)*NetworkManager.itemPerPage
 	}
 	
-	init(view: ISearchView) {
+	
+	
+	init(view: ISearchView, router: ISearchViewRouter) {
 		self.view = view
+		self.router = router
 		self.photos = nil
 		self.currentPage = 1
 	}
@@ -90,11 +94,10 @@ final class SearchViewPresenter: ISearchViewPresenter {
 		}
 	}
 	
-	func getPhoto(at indexPath: IndexPath) -> Photos.Result? {
+	func showDetail(at indexPath: IndexPath) {
 		if let photo = photos?.results[indexPath.item] {
-			return photo
+			router?.showDetailScene(of: photo)
 		}
-		return .none
 	}
 	
 	private func checkFirstSearch() {
