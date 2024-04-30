@@ -13,12 +13,11 @@ protocol ISearchView: AnyObject {
 	func startLoading()
 	func showNonResultLabel()
 	func showResults()
-	func reloadCollection()
-	func partialReload(for items: [IndexPath])
+	func reloadCollection(with photos: [Photos.Result])
 	func showAlert(title: String, with message: String)
 }
 
-class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController {
 	
 	private lazy var searchField: UISearchTextField = makeSearchField()
 	private lazy var searchButton: UIButton = makeSearchButton()
@@ -26,6 +25,14 @@ class SearchViewController: UIViewController {
 	private lazy var searchResult: UICollectionView = makeSearchResultCollection()
 	private lazy var activityIndicator: UIActivityIndicatorView = makeActivityIndicator()
 	private lazy var nonResultLable: UILabel = makeNonResultLabel()
+	private lazy var photosDataSource: UICollectionViewDiffableDataSource<Sections, Photos.Result> = configureDataSource()
+	private var cleanSnapshoot: NSDiffableDataSourceSnapshot<Sections, Photos.Result> {
+		NSDiffableDataSourceSnapshot<Sections, Photos.Result>()
+	}
+	
+	private enum Sections: Int {
+		case main
+	}
 	
 	var presenter: ISearchViewPresenter!
 	var router: ISearchViewRouter!
@@ -33,7 +40,7 @@ class SearchViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		presenter.viewIsReady()
-		searchResult.dataSource = self
+		searchResult.dataSource = photosDataSource
 		searchResult.delegate = self
 		searchField.delegate = self
 	}
@@ -41,22 +48,12 @@ class SearchViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDataSource
-extension SearchViewController: UICollectionViewDataSource {
-	
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		presenter.cellsCount()
-	}
+extension SearchViewController: UICollectionViewDelegate{
 	
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-		if indexPath.item >= presenter.cellsCount() - 1 {
+		if indexPath.item >= presenter.cellsCount()/2 {
 			presenter.nextPage(request: searchField.text!)
 		}
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as! PhotoCell
-		presenter.prepareCell(at: indexPath, cell: cell)
-		return cell
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -209,9 +206,19 @@ private extension SearchViewController {
 		presenter.search(request: searchField.text!)
 	}
 	
+	private func configureDataSource() -> UICollectionViewDiffableDataSource<Sections, Photos.Result> {
+		let dataSource = UICollectionViewDiffableDataSource<Sections, Photos.Result> (collectionView: searchResult) { [weak self] collectionView, indexPath, _ in
+			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.identifier, for: indexPath) as! PhotoCell
+			self?.presenter.prepareCell(at: indexPath, cell: cell)
+			return cell
+		}
+		return dataSource
+	}
+	
 }
 
 extension SearchViewController: ISearchView {
+	
 	func setupIU() {
 		layout()
 		view.backgroundColor = .white
@@ -223,6 +230,7 @@ extension SearchViewController: ISearchView {
 	}
 	
 	func startLoading() {
+		photosDataSource.applySnapshotUsingReloadData(cleanSnapshoot)
 		nonResultLable.isHidden = true
 		searchResult.isHidden = true
 		activityIndicator.startAnimating()
@@ -239,19 +247,15 @@ extension SearchViewController: ISearchView {
 		searchResult.isHidden = false
 	}
 	
-	func reloadCollection() {
-		searchResult.reloadData()
+	func reloadCollection(with photos: [Photos.Result]) {
+		var snapshoot = NSDiffableDataSourceSnapshot<Sections, Photos.Result>()
+		snapshoot.appendSections([.main])
+		snapshoot.appendItems(photos, toSection: .main)
+		photosDataSource.apply(snapshoot)
 	}
 	
 	func showAlert(title: String, with message: String) {
 		stopLoading()
 		callAlert(title: title, message: message)
-	}
-	
-	func partialReload(for items: [IndexPath]) {
-		searchResult.performBatchUpdates {
-			searchResult.insertItems(at: items)
-			searchResult.reloadItems(at: items)
-		}
 	}
 }

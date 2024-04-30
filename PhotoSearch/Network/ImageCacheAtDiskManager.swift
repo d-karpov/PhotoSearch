@@ -60,7 +60,6 @@ class ImageCacheAtDiskManager {
 			} catch let error {
 				print(error.localizedDescription)
 			}
-
 		}
 		return .none
 	}
@@ -77,8 +76,9 @@ class ImageCacheAtDiskManager {
 	private func loadImageData(of photo: Photos.Result, large: Bool) {
 		let id = large ? photo.id + largePostfix : photo.id
 		let url = large ? photo.urls.regular : photo.urls.thumb
+		let path = directoryURL.appending(path: id)
 		
-		if  read(from: id) == nil {
+		if !manager.fileExists(atPath: path.relativePath) {
 			imageGroup.enter()
 			NetworkManager.fetchImageData(from: url) { [weak self] result in
 				switch result {

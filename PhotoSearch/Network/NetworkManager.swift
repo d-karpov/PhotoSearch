@@ -11,9 +11,18 @@ import Foundation
 struct Photos: Codable {
 	var results: [Result]
 	
-	struct Result: Codable {
+	struct Result: Hashable, Codable {
 		let id: String
 		let urls: Url
+		
+		static func == (lhs: Photos.Result, rhs: Photos.Result) -> Bool {
+			lhs.id == rhs.id && rhs.id == lhs.id
+		}
+		
+		func hash(into hasher: inout Hasher) {
+			hasher.combine(id)
+		}
+	
 	}
 	
 	struct Url: Codable {
