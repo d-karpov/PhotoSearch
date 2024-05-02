@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+final class DetailViewController: UIViewController {
 	
 	lazy var imageView: UIImageView = UIImageView()
 	
@@ -15,7 +15,7 @@ class DetailViewController: UIViewController {
 		super.viewDidLoad()
 		view.backgroundColor = .white
 		view.addSubview(imageView)
-
+		
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
@@ -26,7 +26,7 @@ class DetailViewController: UIViewController {
 			imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
 			imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
 		])
-
+		
 	}
 }
 
