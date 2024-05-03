@@ -26,9 +26,7 @@ final class SearchViewController: UIViewController {
 	private lazy var activityIndicator: UIActivityIndicatorView = makeActivityIndicator()
 	private lazy var nonResultLable: UILabel = makeNonResultLabel()
 	private lazy var photosDataSource: UICollectionViewDiffableDataSource<Sections, Photos.Result> = configureDataSource()
-	private var cleanSnapshoot: NSDiffableDataSourceSnapshot<Sections, Photos.Result> {
-		NSDiffableDataSourceSnapshot<Sections, Photos.Result>()
-	}
+	private lazy var cleanSnapshoot = NSDiffableDataSourceSnapshot<Sections, Photos.Result>()
 	
 	private enum Sections: Int {
 		case main
